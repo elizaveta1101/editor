@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+    <link rel="stylesheet" href="./style/css/style.css">
+
+   
+
+    <title>Редактор</title>
+</head>
+<body>  
+    <div class="editor">
+        <div class="editor__functions">
+            <button id="functionLine">Линия</button><br>
+            <button id="functionCurve" disabled>Кривая</button><br>
+            <button id="functionRectangle">Прямоугольник</button><br>
+            <button id="functionPolygon">Многоугольник</button><br>
+            <button id="functionCircle">Круг</button><br>
+        </div>
+        <div class="editor__interact">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="editor__buttons">
+            <button onclick="clearViewport();">Очистить</button>
+        </div>
+        <div class="editor__values">
+            <label for="angles">Количество углов</label><br>
+            <input type="text" id="angles" name="angles"><br><br>
+            <label for="side">Длина стороны</label><br>
+            <input type="text" id="side" name="side"><br><br>
+            <label for="radius">Радиус круга</label><br>
+            <input type="text" id="radius" name="radius"><br><br>
+        </div>
+        <div class="editor__description">
+            Нажмите на кнопку "Линия" и начертите в серой области линию <br>
+            Нажмите кнопку "Прямоугольник" и начертите в серой области прямоугольник <br>
+            Нажмите кнопку "Многоугольник", затем введите количество углов и длину стороны многоугольника (например, 5 углов, сторона 15) и кликните по серой области (в середине построится многоугольник по вашим параметрам) <br>
+            Нажмите кнопку "Круг", затем введите радиус круга (например, 15) и кликните по серой области (в центре построится круг) <br>
+            Нажмите кнопку "Очистить", чтобы очистить серую область (в редакторе на сайте ее не будет) <br>
+            Окружность и Многоугольник можно будет строить как прямоугольник в дальнейшем <br>
+            Поочередное использование функций без очистки серой области еще не до конца налажено
+        </div>
+    </div>
+    <script src="./src/index.js"></script>
+</body>
+</html>
