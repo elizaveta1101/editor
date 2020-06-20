@@ -15,9 +15,9 @@ const FSHADER_SOURCE = //источник кода для фрагментног
 
 let gl;
 let shaderProgram;
-let vertexArray = [];
-let lastAction = []; //первый элемент - режим, остальные - координаты вершин
-let descriptionArray = []; //элементы чередуются первый - режим, второй - количество вершин
+let vertexArray = []; //элементы чередуются: первый - x, второй - y
+let descriptionArray = []; //элементы чередуются: первый - режим, второй - индекс первой вершины
+
 /*режим - 0-точка
     1-линия
     2-кривая?
@@ -100,32 +100,39 @@ function draw() {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexArray), gl.STATIC_DRAW);
 
-    let indexArray = [];
+    let indexArray = []; //массив индексов
 
     for (let i = 0; i < descriptionArray.length; i += 2) {
-        startIndex = descriptionArray[i + 1] / 2;
+        let mode = descriptionArray[i];
+        let startIndex = descriptionArray[i + 1] / 2;
+        let k=startIndex;
+        let endIndex;
         if ((i + 3) < descriptionArray.length) {
             endIndex = descriptionArray[i + 3] / 2;
         } else {
             endIndex = vertexArray.length / 2;
         }
-
-        if (descriptionArray[i] === 0 || descriptionArray[i] === 1 || descriptionArray[i] === 2 || descriptionArray[i] === 4) {
-            for (let j = startIndex; j < endIndex; j++) {
-                indexArray.push(j);
-            }
-        } else if (descriptionArray[i] === 3) {
-            let k = 0;
-            for (let j = startIndex; j < endIndex; j++) {
-                k++;
-                if (k === 4) {
-                    indexArray.push(j - 3);
-                    indexArray.push(j - 1);
-                    k = 0;
+        for (let j = startIndex; j < endIndex; j++) {
+            indexArray.push(j);
+            /*режим - 0-точка
+                1-линия
+                2-кривая?
+                3-прямоугольник
+                4-многоугольник
+                5-круг
+            */
+            if (mode===3) {
+                if ((j-k)%4!==0) {
+                    indexArray.push(j);
                 }
-                indexArray.push(j);
-            }
+                if (j-k+1===4) {
+                    indexArray.push(k);
+                    k+=4;
+                }
+                
+            } 
         }
+        console.log(indexArray);
     }
 
     let indexBuffer = gl.createBuffer();
@@ -155,33 +162,17 @@ function draw() {
             4-многоугольник
             5-круг
         */
-
-        if (mode === 0) {
-            gl.drawElements(gl.POINTS, endIndex - startIndex, gl.UNSIGNED_SHORT, startIndex);
-        } else
-        if (mode === 1) {
-            gl.drawArrays(gl.LINES, startIndex, (endIndex - startIndex) / 2);
-        } else
-        if (mode === 2) {
-            gl.drawArrays(gl.LINE_STRIP, startIndex, endIndex - startIndex);
-
-        } else if (mode === 3) {
-            let amount;
-            
-            if (endIndex - startIndex === 6) {
-                amount = 6;
-            } else {
-                amount = (endIndex - startIndex) / 8*6;
-            }
-            gl.drawElements(gl.TRIANGLES, amount, gl.UNSIGNED_SHORT, startIndex);
-
-        } else if (mode === 4) {
-
-            gl.drawArrays(gl.TRIANGLE_FAN, startIndex, (endIndex - startIndex) / 2);
-
-        } else if (mode === 5) {
-            gl.drawArrays(gl.TRIANGLE_FAN, startIndex, (endIndex - startIndex) / 2);
+        if (mode===1) {
+            amount = (endIndex - startIndex)/2;
         }
+        else {
+            amount = (endIndex - startIndex);
+        }
+        console.log(startIndex + 'start');
+        console.log(endIndex + 'end');
+        console.log(amount + 'amount');
+        gl.drawElements(gl.LINES,  amount, gl.UNSIGNED_SHORT, startIndex);
+        
 
     }
 }
@@ -327,20 +318,6 @@ function onmouseup(event, canvas) {
 }
 
 function drawLine() {
-    // let endY = vertexArray.pop();
-    // let endX = vertexArray.pop();
-    // let startY = vertexArray.pop();
-    // let startX = vertexArray.pop();
-
-    // // if ((endX < startX * 1.03 || endX > startX * 0.97) && endY - startY !== 0) {
-    // //     endX = startX;
-    // // }
-    // // if ((endY < startY * 1.03 || endY > startY * 0.97) && endX - startX !== 0) {
-    // //     endY = startY;
-    // // }
-
-    // vertexArray.push(startX, startY);
-    // vertexArray.push(endX, endY);
     draw();
 }
 
