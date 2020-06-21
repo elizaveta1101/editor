@@ -1,12 +1,12 @@
 .editor {
   display: grid;
-  grid-template-columns: [functions] 1fr [interact] 2fr [values] 1fr;
-  grid-template-rows: [editor] 400px [buttons] 20px [description] 200px;
+  grid-template-columns: [functions] 1fr [interact] 3fr [values] 2fr;
+  grid-template-rows: [editor] 500px [buttons] 20px [description] 200px;
   grid-auto-flow: row;
   justify-items: center;
   align-items: center;
   padding: 15px;
-  width: 800px;
+  width: 900px;
   background-color: #d3ffe9;
 }
 .editor__functions {

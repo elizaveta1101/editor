@@ -97,125 +97,122 @@ function getShader(type, source) {
 
 
 function draw() {
-    let vertexBuffer = gl.createBuffer();
+    // let vertexBuffer = gl.createBuffer();
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexArray), gl.STATIC_DRAW);
+    // gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexArray), gl.STATIC_DRAW);
 
-    let indexArray = []; //массив индексов
-    console.log('vertex');
-    console.log(vertexArray);
+    // let indexArray = []; //массив индексов
+    // console.log('vertex');
+    // console.log(vertexArray);
 
-    let numberOfPolygon = 0;
-    let numberOfCircle = 0;
-    for (let i = 0; i < descriptionArray.length; i += 2) {
-        let mode = descriptionArray[i];
-        let startIndex = descriptionArray[i + 1] / 2;
-        let k = startIndex;
+    // let numberOfPolygon = 0;
+    // let numberOfCircle = 0;
+    // for (let i = 0; i < descriptionArray.length; i += 2) {
+    //     let mode = descriptionArray[i];
+    //     let startIndex = descriptionArray[i + 1] / 2;
+    //     let k = startIndex;
 
-        let endIndex;
-        if ((i + 3) < descriptionArray.length) {
-            endIndex = descriptionArray[i + 3] / 2;
-        } else {
-            endIndex = vertexArray.length / 2;
-        }
+    //     let endIndex;
+    //     if ((i + 3) < descriptionArray.length) {
+    //         endIndex = descriptionArray[i + 3] / 2;
+    //     } else {
+    //         endIndex = vertexArray.length / 2;
+    //     }
 
-        if (mode === 4) {
-            numberOfPolygon++;
-        } else
-        if (mode === 5) {
-            numberOfCircle++;
-        }
+    //     if (mode === 4) {
+    //         numberOfPolygon++;
+    //     } else
+    //     if (mode === 5) {
+    //         numberOfCircle++;
+    //     }
 
-        for (let j = startIndex; j < endIndex; j++) {
-            indexArray.push(j);
-            /*режим - 0-точка
-                1-линия
-                2-кривая?
-                3-прямоугольник
-                4-многоугольник
-                5-круг
-            */
-            if (mode === 3) {
-                if ((j - k) % 4 !== 0) {
-                    indexArray.push(j);
-                }
-                if (j - k + 1 === 4) {
-                    indexArray.push(k);
-                    k += 4;
-                }
+    //     for (let j = startIndex; j < endIndex; j++) {
+    //         indexArray.push(j);
+    //         /*режим - 0-точка
+    //             1-линия
+    //             2-кривая?
+    //             3-прямоугольник
+    //             4-многоугольник
+    //             5-круг
+    //         */
+    //         if (mode === 3) {
+    //             if ((j - k) % 4 !== 0) {
+    //                 indexArray.push(j);
+    //             }
+    //             if (j - k + 1 === 4) {
+    //                 indexArray.push(k);
+    //                 k += 4;
+    //             }
 
-            } else
-            if (mode === 4) {
-                angles = polygonAngles[numberOfPolygon - 1];
-                if ((j - k) % angles !== 0) {
-                    indexArray.push(j);
-                }
-                if (j - k + 1 === angles) {
-                    indexArray.push(k);
-                    k += angles;
-                    numberOfPolygon++;
-                }
-            } else
-            if (mode === 5) {
-                const n = circleRadius[numberOfCircle - 1];
+    //         } else
+    //         if (mode === 4) {
+    //             angles = polygonAngles[numberOfPolygon - 1];
+    //             if ((j - k) % angles !== 0) {
+    //                 indexArray.push(j);
+    //             }
+    //             if (j - k + 1 === angles) {
+    //                 indexArray.push(k);
+    //                 k += angles;
+    //                 numberOfPolygon++;
+    //             }
+    //         } else
+    //         if (mode === 5) {
+    //             const n = circleRadius[numberOfCircle - 1];
 
-                if ((j - k) % n !== 0) {
-                    indexArray.push(j);
-                }
-                if (j - k + 1 === n) {
-                    indexArray.push(k);
-                    k += n;
-                    numberOfCircle++;
-                }
-            }
-        }
+    //             if ((j - k) % n !== 0) {
+    //                 indexArray.push(j);
+    //             }
+    //             if (j - k + 1 === n) {
+    //                 indexArray.push(k);
+    //                 k += n;
+    //                 numberOfCircle++;
+    //             }
+    //         }
+    //     }
 
-    }
+    // }
 
-    console.log('index');
-    console.log(indexArray);
-    let indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArray), gl.STATIC_DRAW);
+    // console.log('index');
+    // console.log(indexArray);
+    // let indexBuffer = gl.createBuffer();
+    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArray), gl.STATIC_DRAW);
 
     let vertexPosition = gl.getAttribLocation(shaderProgram, 'a_Position');
     gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, gl.FALSE, 0, 0);
     gl.enableVertexAttribArray(vertexPosition);
 
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
 
 
-    for (let i = 0; i < descriptionArray.length; i += 2) {
+    // for (let i = 0; i < descriptionArray.length; i += 2) {
 
-        let mode = descriptionArray[i];
-        startIndex = descriptionArray[i + 1];
-        if ((i + 3) < descriptionArray.length) {
-            endIndex = descriptionArray[i + 3];
-        } else {
-            endIndex = vertexArray.length;
-        }
-        /*режим - 0-точка
-            1-линия
-            2-кривая?
-            3-прямоугольник
-            4-многоугольник
-            5-круг
-        */
-        if (mode === 1) {
-            amount = (endIndex - startIndex) / 2;
-        } else {
-            amount = (endIndex - startIndex);
-        }
-        console.log(startIndex + 'start');
-        console.log(endIndex + 'end');
-        console.log(amount + 'amount');
-        gl.lineWidth(0.5);
-        gl.drawElements(gl.LINES, amount, gl.UNSIGNED_SHORT, startIndex);
-        
-    }
-    gl.flush();
+    //     let mode = descriptionArray[i];
+    //     startIndex = descriptionArray[i + 1];
+    //     if ((i + 3) < descriptionArray.length) {
+    //         endIndex = descriptionArray[i + 3];
+    //     } else {
+    //         endIndex = vertexArray.length;
+    //     }
+    //     /*режим - 0-точка
+    //         1-линия
+    //         2-кривая?
+    //         3-прямоугольник
+    //         4-многоугольник
+    //         5-круг
+    //     */
+    //     if (mode === 1) {
+    //         amount = (endIndex - startIndex) / 2;
+    //     } else {
+    //         amount = (endIndex - startIndex);
+    //     }
+    //     console.log(startIndex + 'start');
+    //     console.log(endIndex + 'end');
+    //     console.log(amount + 'amount');
+    //     gl.drawElements(gl.LINES, amount, gl.UNSIGNED_SHORT, startIndex);
+    // }
 }
 
 window.onload = function () {
@@ -326,7 +323,7 @@ function onmousemove(event, canvas) {
             }
             vertexArray.push(x);
             vertexArray.push(y);
-            drawLine();
+            drawLine(canvas);
         } else if (mode === 2) {
 
 
@@ -366,8 +363,20 @@ function onmouseup(event, canvas) {
     }
 }
 
-function drawLine() {
-    draw();
+function drawLine(canvas) {
+    let vertexBuffer = gl.createBuffer();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexArray), gl.STATIC_DRAW);
+    
+
+    let vertexPosition = gl.getAttribLocation(shaderProgram, 'a_Position');
+    gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, gl.FALSE, 0, 0);
+    gl.enableVertexAttribArray(vertexPosition);
+   
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    console.log(vertexArray);
+    gl.drawArrays(gl.LINES,(vertexArray.length-4), 2);
 }
 
 function drawCurve() {}
