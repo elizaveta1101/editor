@@ -409,8 +409,8 @@ function drawPolygon() {
     alpha = 0;
 
     for (let i = 0; i < angles; i++) {
-        x = R * Math.cos(alpha + startAngle) + xc;
-        y = R * Math.sin(alpha + startAngle) + yc;
+        x = R * Math.cos(alpha - startAngle) + xc;
+        y = R * Math.sin(alpha - startAngle) + yc;
 
         vertexArray.push(x);
         vertexArray.push(y);
